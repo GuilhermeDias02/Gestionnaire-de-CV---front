@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getCvById } from "./api"; // Import de la fonction depuis api.jsx
+import { getCvById } from "./api"; 
 
 const CvDetails = () => {
-    const { id } = useParams(); // Récupère l'ID du CV depuis l'URL
+    const { id } = useParams();
     const [cv, setCv] = useState(null);
     const [message, setMessage] = useState("");
 
     useEffect(() => {
         const fetchCvDetails = async () => {
             try {
-                const token = localStorage.getItem("token"); // Récupère le token depuis le localStorage
-                const cvData = await getCvById(id, token); // Appelle la fonction depuis api.jsx
-                setCv(cvData); // Stocke les données du CV dans l'état
+                const token = localStorage.getItem("token");
+                const cvData = await getCvById(id, token);
+                setCv(cvData);
             } catch (error) {
                 setMessage("Erreur lors de la récupération du CV.", error);
             }
@@ -21,7 +21,6 @@ const CvDetails = () => {
         fetchCvDetails();
     }, [id]);
 
-    // Si le CV n'est pas encore chargé, affichez un message de chargement
     if (!cv) {
         return <p>Chargement des détails...</p>;
     }
