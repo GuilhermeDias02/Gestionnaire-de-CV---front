@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import du hook useNavigate
 import { createUser } from './api';
 
 const CreateUser = () => {
   const [formData, setFormData] = useState({ nom: '', prenom: '', email: '', password: '' });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Initialisation du hook
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,31 +17,36 @@ const CreateUser = () => {
     try {
       const result = await createUser(formData);
       setMessage(result.message);
+
+      // Réinitialise le formulaire
       setFormData({ nom: '', prenom: '', email: '', password: '' });
+
+      // Redirige vers la page de connexion après un délai
+      setTimeout(() => navigate('/login'), 2000); // Redirection après 2 secondes
     } catch (error) {
-      setMessage(error.response?.data?.error || 'Error creating user');
+      setMessage(error.response?.data?.error || 'Erreur lors de la création de l\'utilisateur');
     }
   };
 
   return (
     <div>
-      <h1>Create User</h1>
+      <h1>Inscription</h1>
       <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="nom"
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Nom"
-        required
+        <input
+          type="text"
+          name="nom"
+          value={formData.nom}
+          onChange={handleChange}
+          placeholder="Nom"
+          required
         />
         <input
-        type="text"
-        name="prenom" 
-        value={formData.prenom || ''}
-        onChange={handleChange}
-        placeholder="Prenom"
-        required
+          type="text"
+          name="prenom"
+          value={formData.prenom}
+          onChange={handleChange}
+          placeholder="Prénom"
+          required
         />
         <input
           type="email"
@@ -54,10 +61,10 @@ const CreateUser = () => {
           name="password"
           value={formData.password}
           onChange={handleChange}
-          placeholder="Password"
+          placeholder="Mot de passe"
           required
         />
-        <button type="submit">Create</button>
+        <button type="submit">S inscrire</button>
       </form>
       {message && <p>{message}</p>}
     </div>
