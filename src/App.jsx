@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Register from './register';
 import Login from './login';
 import Dashboard from './dashboard';
-import CreateCv from './CreateCv';
+import CreateEditCv from './CreateEditCv'; 
 import MyCVs from './MyCvs';
 import CvDetails from "./CvDetails";
 
@@ -27,9 +27,10 @@ const App = () => (
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/create-cv" element={<CreateCv />} />
+      <Route path="/create-cv" element={<CreateEditCv />} />
       <Route path="/my-cvs" element={<MyCVs />} />
       <Route path="/cv/:id" element={<CvDetails />} />
+      <Route path="/edit-cv/:id" element={<CreateEditCv isEdit={true} />} />
     </Routes>
   </Router>
 );

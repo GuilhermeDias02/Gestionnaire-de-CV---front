@@ -1,30 +1,60 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createCv } from "./api";
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types'; // Import de PropTypes
+import { createCv, getCvById, updateCv } from './api';
 
-const CreateCv = () => {
+const CreateEditCv = ({ isEdit = false }) => {
   const [cvData, setCvData] = useState({
-    titre: "",
-    adresse: "",
-    description: "",
-    techSkills: [""],
-    softSkills: [""],
-    certifications: [""],
-    expPro: [
-      {
-        entreprise: "",
-        poste: "",
-        description: "",
-      },
-    ],
+    titre: '',
+    adresse: '',
+    description: '',
+    techSkills: [''],
+    softSkills: [''],
+    certifications: [''],
+    expPro: [{ entreprise: '', poste: '', description: '' }],
     visible: true,
   });
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (isEdit && id) {
+      const fetchCv = async () => {
+        try {
+          const token = localStorage.getItem('token');
+          const cv = await getCvById(id, token);
+          setCvData(cv);
+        } catch (error) {
+          setMessage('Erreur lors du chargement du CV : ' + error.message);
+        }
+      };
+
+      fetchCv();
+    }
+  }, [isEdit, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCvData({ ...cvData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      if (isEdit) {
+        await updateCv(id, cvData, token); // Appel API pour mettre à jour
+        setMessage('CV mis à jour avec succès !');
+      } else {
+        await createCv(cvData, token); // Appel API pour créer
+        setMessage('CV créé avec succès !');
+      }
+
+      setTimeout(() => navigate('/my-cvs'), 2000);
+    } catch (error) {
+      setMessage(error.message || 'Erreur lors de la sauvegarde du CV.');
+    }
   };
 
   const handleArrayChange = (index, key, value, arrayKey) => {
@@ -56,46 +86,9 @@ const CreateCv = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setMessage("Utilisateur non connecté. Veuillez vous connecter.");
-        navigate("/login");
-        return;
-      }
-
-      await createCv(cvData, token);
-      setMessage("CV créé avec succès !");
-
-      setCvData({
-        titre: "",
-        adresse: "",
-        description: "",
-        techSkills: [""],
-        softSkills: [""],
-        certifications: [""],
-        expPro: [
-          {
-            entreprise: "",
-            poste: "",
-            description: "",
-          },
-        ],
-        visible: true,
-      });
-
-      setTimeout(() => navigate("/my-cvs"), 2000);
-    } catch (error) {
-      console.error("Error creating CV:", error);
-      setMessage(error.response?.data?.error || "Erreur lors de la création du CV.");
-    }
-  };
-
   return (
     <div>
-      <h1>Créer un CV</h1>
+      <h1>{isEdit ? 'Modifier le CV' : 'Créer un CV'}</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -118,7 +111,6 @@ const CreateCv = () => {
           value={cvData.description}
           onChange={handleChange}
         />
-
         <h3>Compétences techniques</h3>
         {cvData.techSkills.map((skill, index) => (
           <div key={index}>
@@ -206,23 +198,25 @@ const CreateCv = () => {
         <button type="button" onClick={addExperience}>
           Ajouter une expérience
         </button>
-
         <label>
           Visible :
           <input
             type="checkbox"
             name="visible"
             checked={cvData.visible}
-            onChange={(e) =>
-              setCvData({ ...cvData, visible: e.target.checked })
-            }
+            onChange={(e) => setCvData({ ...cvData, visible: e.target.checked })}
           />
         </label>
-        <button type="submit">Créer</button>
+        <button type="submit">{isEdit ? 'Sauvegarder' : 'Créer'}</button>
       </form>
       {message && <p>{message}</p>}
     </div>
   );
 };
 
-export default CreateCv;
+// Validation des props
+CreateEditCv.propTypes = {
+  isEdit: PropTypes.bool,
+};
+
+export default CreateEditCv;

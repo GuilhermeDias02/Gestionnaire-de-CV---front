@@ -37,7 +37,7 @@ export const createCv = async (cvData, token) => {
   }
 };
 
-export const getCVs = async (token) => {
+export const getMyCvs = async (token) => {
   try {
     const response = await axios.get(`${API_URL}/cv`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -49,7 +49,7 @@ export const getCVs = async (token) => {
   }
 };
 
-export const deleteCV = async (cvId, token) => {
+export const deleteCv = async (cvId, token) => {
   try {
     const response = await axios.delete(`${API_URL}/cv/${cvId}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -75,7 +75,7 @@ export const getCvById = async (id, token) => {
   }
 };
 
-export const updtadeCv = async (cvId, token) => {
+export const updateCv = async (cvId, token) => {
   try {
     const response = await axios.put(`${API_URL}/cv/${cvId}`, cvId, {
       headers: {

@@ -1,58 +1,56 @@
 import { useEffect, useState } from 'react';
-import { getCVs, deleteCV } from './api';
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { getMyCvs, deleteCv } from './api';
 
-const MyCVs = () => {
+const MyCvs = () => {
   const [cvs, setCvs] = useState([]);
-  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCVs = async () => {
+    const fetchCvs = async () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          setMessage('Non autorisé. Veuillez vous connecter.');
-          return;
+          setErrorMessage('Utilisateur non connecté. Veuillez vous connecter.');
+          return navigate('/login');
         }
 
-        const response = await getCVs(token);
-        setCvs(response);
+        const result = await getMyCvs(token);
+        setCvs(result);
       } catch (error) {
-        setMessage('Erreur lors de la récupération des CV.');
-        console.error(error);
+        setErrorMessage('Erreur lors de la récupération des CVs : ' + error.message);
       }
     };
 
-    fetchCVs();
-  }, []);
+    fetchCvs();
+  }, [navigate]);
 
-  // Supprimer un CV
-  const handleDelete = async (cvId) => {
+  const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) {
-        setMessage('Non autorisé. Veuillez vous connecter.');
-        return;
-      }
-
-      await deleteCV(cvId, token); // Appel API pour supprimer le CV
-      setMessage('CV supprimé avec succès.');
-      setCvs(cvs.filter((cv) => cv._id !== cvId)); // Mise à jour de la liste des CVs
+      await deleteCv(id, token);
+      setCvs((prevCvs) => prevCvs.filter((cv) => cv._id !== id));
     } catch (error) {
-      setMessage('Erreur lors de la suppression du CV.');
-      console.error(error);
+      setErrorMessage('Erreur lors de la suppression du CV : ' + error.message);
     }
+  };
+
+  const handleEdit = (id) => {
+    navigate(`/edit-cv/${id}`);
   };
 
   return (
     <div>
       <h1>Mes CV</h1>
-      {message && <p>{message}</p>}
+      {errorMessage && <p>{errorMessage}</p>}
       {cvs.length > 0 ? (
         <ul>
           {cvs.map((cv) => (
             <li key={cv._id}>
-              <Link to={`/cv/${cv._id}`}>{cv.titre}</Link>
+              <h2>{cv.titre}</h2>
+              <p>{cv.description}</p>
+              <button onClick={() => handleEdit(cv._id)}>Éditer</button>
               <button onClick={() => handleDelete(cv._id)}>Supprimer</button>
             </li>
           ))}
@@ -64,4 +62,4 @@ const MyCVs = () => {
   );
 };
 
-export default MyCVs;
+export default MyCvs;
