@@ -74,3 +74,17 @@ export const getCvById = async (id, token) => {
       throw error;
   }
 };
+
+export const updtadeCv = async (cvId, token) => {
+  try {
+    const response = await axios.put(`${API_URL}/cv/${cvId}`, cvId, {
+      headers: {
+        Authorization: `Bearer ${token}`, 
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating CV:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};

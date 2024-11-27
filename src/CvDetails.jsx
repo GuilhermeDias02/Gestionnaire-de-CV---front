@@ -27,11 +27,13 @@ const CvDetails = () => {
 
     return (
         <div>
-            <h1>Détails du CV</h1>
+            <h1>CV</h1>
             {message && <p>{message}</p>}
             {cv && (
                 <div>
                     <h2>{cv.titre}</h2>
+                    <p><strong>Nom :</strong> {cv.nom}</p>
+                    <p><strong>Prénom :</strong> {cv.prenom}</p>
                     <p><strong>Adresse :</strong> {cv.adresse}</p>
                     <p><strong>Description :</strong> {cv.description}</p>
                     <p><strong>Compétences techniques :</strong> {cv.techSkills?.join(", ") || "Aucune compétence technique."}</p>
@@ -44,7 +46,7 @@ const CvDetails = () => {
                                 <li key={index}>
                                     <p><strong>Entreprise :</strong> {exp.entreprise}</p>
                                     <p><strong>Poste :</strong> {exp.poste}</p>
-                                    <p><strong>Durée :</strong> {exp.duree}</p>
+                                    <p><strong>Description :</strong> {exp.description}</p>
                                 </li>
                             ))
                         ) : (
