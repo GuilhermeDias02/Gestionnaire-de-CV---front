@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import du hook useNavigate
-import { createUser } from './api';
+import { createUser } from '../api';
 
 const CreateUser = () => {
   const [formData, setFormData] = useState({ nom: '', prenom: '', email: '', password: '' });

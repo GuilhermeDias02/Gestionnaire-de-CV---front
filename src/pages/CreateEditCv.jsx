@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types'; // Import de PropTypes
-import { createCv, getCvById, updateCv } from './api';
+import { createCv, getCvById, updateCv } from '../api';
 
 const CreateEditCv = ({ isEdit = false }) => {
   const [cvData, setCvData] = useState({

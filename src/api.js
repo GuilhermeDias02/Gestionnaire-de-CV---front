@@ -63,7 +63,7 @@ export const deleteCv = async (cvId, token) => {
 
 export const getCvById = async (id, token) => {
   try {
-      const response = await axios.get(`${API_URL}/cv/${id}`, {
+      const response = await axios.get(`${API_URL}/cv/one/${id}`, {
           headers: {
               Authorization: `Bearer ${token}`,
           },
@@ -75,9 +75,9 @@ export const getCvById = async (id, token) => {
   }
 };
 
-export const updateCv = async (cvId, token) => {
+export const updateCv = async (cvId,cvData, token) => {
   try {
-    const response = await axios.put(`${API_URL}/cv/${cvId}`, cvId, {
+    const response = await axios.put(`${API_URL}/cv/${cvId}`, cvData, {
       headers: {
         Authorization: `Bearer ${token}`, 
       },
@@ -88,3 +88,14 @@ export const updateCv = async (cvId, token) => {
     throw error.response?.data || error.message;
   }
 };
+
+export const searchCvs = async (searchTerm) => {
+  try {
+    const response = await axios.get(`${API_URL}/cv/search/${searchTerm}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la recherche des CVs :', error);
+    throw error;
+  }
+};
+

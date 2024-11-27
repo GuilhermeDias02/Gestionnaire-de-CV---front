@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getCvById } from "./api"; 
+import { getCvById } from "../api"; 
 
 const CvDetails = () => {
     const { id } = useParams();

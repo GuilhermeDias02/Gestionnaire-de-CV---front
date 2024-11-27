@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMyCvs, deleteCv } from './api';
+import { getMyCvs, deleteCv} from '../api';
 
 const MyCvs = () => {
   const [cvs, setCvs] = useState([]);
@@ -40,6 +40,10 @@ const MyCvs = () => {
     navigate(`/edit-cv/${id}`);
   };
 
+  const handleViewDetails = (id) => {
+    navigate(`/cv/${id}`); // Redirige vers la page des détails du CV
+  };
+
   return (
     <div>
       <h1>Mes CV</h1>
@@ -48,7 +52,13 @@ const MyCvs = () => {
         <ul>
           {cvs.map((cv) => (
             <li key={cv._id}>
-              <h2>{cv.titre}</h2>
+              <h2
+                className="cv-title"
+                onClick={() => handleViewDetails(cv._id)}
+                style={{ cursor: 'pointer', color: 'blue' }}
+              >
+                {cv.titre}
+              </h2>
               <p>{cv.description}</p>
               <button onClick={() => handleEdit(cv._id)}>Éditer</button>
               <button onClick={() => handleDelete(cv._id)}>Supprimer</button>
