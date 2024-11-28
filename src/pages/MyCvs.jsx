@@ -4,7 +4,7 @@ import { getMyCvs, deleteCv} from '../api';
 
 const MyCvs = () => {
   const [cvs, setCvs] = useState([]);
-  const [recomms, setRecomms] = useState([]);
+//   const [recomms, setRecomms] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 

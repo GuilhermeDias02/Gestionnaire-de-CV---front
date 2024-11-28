@@ -8,6 +8,7 @@ import MyCVs from './pages/MyCvs';
 import CvDetails from "./pages/CvDetails";
 import { searchCvs } from './api';
 import Layout from './components/Layout';
+import CreateEditRecomm from './pages/CreateEditRecomm';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -87,7 +88,9 @@ const App = () => (
               <Route path="/create-cv" element={<CreateEditCv />} />
               <Route path="/my-cvs" element={<MyCVs />} />
               <Route path="/cv/:id" element={<CvDetails />} />
-              <Route path="/edit-cv/:id" element={<CreateEditCv isEdit />} />   
+              <Route path="/edit-cv/:id" element={<CreateEditCv isEdit />} />
+              <Route path="/create-recomm" element={<CreateEditRecomm/>} />
+              {/* <Route path="/edit-recomm" element={<CreateEditRecomm true/>} /> */}
             </Routes>
           </Layout>
         }

@@ -23,20 +23,6 @@ export const login = async (userData) => {
   }
 };
 
-export const createCv = async (cvData, token) => {
-  try {
-    const response = await axios.post(`${API_URL}/cv`, cvData, {
-      headers: {
-        Authorization: `Bearer ${token}`, 
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error creating CV:', error.response?.data || error.message);
-    throw error.response?.data || error.message;
-  }
-};
-
 export const getCurrentUser = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/user/connected/token`, {
@@ -50,6 +36,20 @@ export const getCurrentUser = async (token) => {
         throw error.response?.data || error.message;
       }
 }
+
+export const createCv = async (cvData, token) => {
+  try {
+    const response = await axios.post(`${API_URL}/cv`, cvData, {
+      headers: {
+        Authorization: `Bearer ${token}`, 
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating CV:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};
 
 export const getMyCvs = async (token) => {
   try {
@@ -115,10 +115,55 @@ export const searchCvs = async (searchTerm) => {
 
 export const getRecommByCv = async (cvId, token) => {
   try {
-    const response = await axios.get(`${API_URL}/recommendation/cv/${cvId}`);
+    const response = await axios.get(`${API_URL}/recommendation/cv/${cvId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
     return response.data;
   } catch (error) {
     console.error('Erreur lors de la recherche des recommendations:', error);
     throw error;
   }
 };
+
+export const getRecommById = async (id, token) => {
+    try {
+        const response = await axios.get(`${API_URL}/recommendation/recomm/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data; 
+    } catch (error) {
+        console.error("Erreur lors de la récupération de la recommandation:", error);
+        throw error;
+    }
+}
+
+export const deleteRecomm = async (id, token) => {
+    try {
+        const response = await axios.delete(`${API_URL}/recomm/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data; // Retourne le message de confirmation
+      } catch (error) {
+        console.error('Erreur lors de la suppression de la recommendation :', error);
+        throw error;
+      }
+  };
+
+export const createRecomm = async (recommData, token) => {
+    try {
+        const response = await axios.post(`${API_URL}/recomm`, recommData, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error creating Recommendation:', error.response?.data || error.message);
+        throw error.response?.data || error.message;
+      }
+  };
+

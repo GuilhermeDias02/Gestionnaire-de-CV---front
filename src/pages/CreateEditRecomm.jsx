@@ -1,55 +1,49 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types'; // Import de PropTypes
-import { createCv, getCvById, updateCv } from '../api';
+import { createRecomm } from '../api';
 
-const CreateEditCv = ({ isEdit = false }) => {
-  const [cvData, setCvData] = useState({
-    titre: '',
-    adresse: '',
-    description: '',
-    techSkills: [''],
-    softSkills: [''],
-    certifications: [''],
-    expPro: [{ entreprise: '', poste: '', description: '' }],
-    visible: true,
+const CreateEditRecomm = () => {
+  const [recommData, setRecommData] = useState({
+    message: ''
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
 
-  useEffect(() => {
-    if (isEdit && id) {
-      const fetchCv = async () => {
-        try {
-          const token = localStorage.getItem('token');
-          const cv = await getCvById(id, token);
-          setCvData(cv);
-        } catch (error) {
-          setMessage('Erreur lors du chargement du CV : ' + error.message);
-        }
-      };
+//   useEffect(() => {
+//     if (isEdit && id) {
+//       const fetchCv = async () => {
+//         try {
+//           const token = localStorage.getItem('token');
+//           const cv = await getCvById(id, token);
+//           setCvData(cv);
+//         } catch (error) {
+//           setMessage('Erreur lors du chargement du CV : ' + error.message);
+//         }
+//       };
 
-      fetchCv();
-    }
-  }, [isEdit, id]);
+//       fetchCv();
+//     }
+//   }, [isEdit, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCvData({ ...cvData, [name]: value });
+    setRecommData({ [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      if (isEdit) {
-        await updateCv(id, cvData, token); // Appel API pour mettre à jour
-        setMessage('CV mis à jour avec succès !');
-      } else {
-        await createCv(cvData, token); // Appel API pour créer
+    //   if (isEdit) {
+    //     await updateCv(id, cvData, token); // Appel API pour mettre à jour
+    //     setMessage('CV mis à jour avec succès !');
+    //   } else {
+        ajouter id author et cv
+        await createRecomm(recommData, token); // Appel API pour créer
         setMessage('CV créé avec succès !');
-      }
+    //   }
 
       setTimeout(() => navigate('/my-cvs'), 2000);
     } catch (error) {
@@ -57,40 +51,40 @@ const CreateEditCv = ({ isEdit = false }) => {
     }
   };
 
-  const handleArrayChange = (index, key, value, arrayKey) => {
-    const updatedArray = [...cvData[arrayKey]];
-    updatedArray[index] = value;
-    setCvData({ ...cvData, [arrayKey]: updatedArray });
-  };
+//   const handleArrayChange = (index, key, value, arrayKey) => {
+//     const updatedArray = [...cvData[arrayKey]];
+//     updatedArray[index] = value;
+//     setCvData({ ...cvData, [arrayKey]: updatedArray });
+//   };
 
-  const addToArray = (arrayKey) => {
-    setCvData({ ...cvData, [arrayKey]: [...cvData[arrayKey], ""] });
-  };
+//   const addToArray = (arrayKey) => {
+//     setCvData({ ...cvData, [arrayKey]: [...cvData[arrayKey], ""] });
+//   };
 
-  const removeFromArray = (index, arrayKey) => {
-    const updatedArray = [...cvData[arrayKey]];
-    updatedArray.splice(index, 1);
-    setCvData({ ...cvData, [arrayKey]: updatedArray });
-  };
+//   const removeFromArray = (index, arrayKey) => {
+//     const updatedArray = [...cvData[arrayKey]];
+//     updatedArray.splice(index, 1);
+//     setCvData({ ...cvData, [arrayKey]: updatedArray });
+//   };
 
-  const handleExpProChange = (index, field, value) => {
-    const updatedExpPro = [...cvData.expPro];
-    updatedExpPro[index][field] = value;
-    setCvData({ ...cvData, expPro: updatedExpPro });
-  };
+//   const handleExpProChange = (index, field, value) => {
+//     const updatedExpPro = [...cvData.expPro];
+//     updatedExpPro[index][field] = value;
+//     setCvData({ ...cvData, expPro: updatedExpPro });
+//   };
 
-  const addExperience = () => {
-    setCvData({
-      ...cvData,
-      expPro: [...cvData.expPro, { entreprise: "", poste: "", description: "" }],
-    });
-  };
+//   const addExperience = () => {
+//     setCvData({
+//       ...cvData,
+//       expPro: [...cvData.expPro, { entreprise: "", poste: "", description: "" }],
+//     });
+//   };
 
   return (
     <div>
       <h1>{isEdit ? 'Modifier le CV' : 'Créer un CV'}</h1>
       <form onSubmit={handleSubmit}>
-        <input
+        {/* <input
           type="text"
           name="titre"
           placeholder="Titre"
@@ -104,11 +98,11 @@ const CreateEditCv = ({ isEdit = false }) => {
           placeholder="Adresse"
           value={cvData.adresse}
           onChange={handleChange}
-        />
+        /> */}
         <textarea
-          name="description"
-          placeholder="Description"
-          value={cvData.description}
+          name="message"
+          placeholder="Message"
+          value={recomm.message}
           onChange={handleChange}
         />
         <h3>Compétences techniques</h3>
@@ -215,8 +209,8 @@ const CreateEditCv = ({ isEdit = false }) => {
 };
 
 // Validation des props
-CreateEditCv.propTypes = {
-  isEdit: PropTypes.bool,
-};
+// CreateEditCv.propTypes = {
+//   isEdit: PropTypes.bool,
+// };
 
-export default CreateEditCv;
+export default CreateEditRecomm;
