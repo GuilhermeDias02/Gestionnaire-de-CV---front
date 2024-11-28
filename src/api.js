@@ -37,6 +37,20 @@ export const createCv = async (cvData, token) => {
   }
 };
 
+export const getCurrentUser = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/user/connected/token`, {
+      headers: {
+        Authorization: `Bearer ${token}`, 
+      },
+    });
+        return response.data;
+    } catch (error) {
+        console.error('Erreur lors de la récupération du user connecté:', error.response?.data || error.message);
+        throw error.response?.data || error.message;
+      }
+}
+
 export const getMyCvs = async (token) => {
   try {
     const response = await axios.get(`${API_URL}/cv`, {

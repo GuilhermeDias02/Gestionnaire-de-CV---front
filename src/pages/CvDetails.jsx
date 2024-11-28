@@ -70,6 +70,7 @@ const CvDetails = () => {
             )}
 
             <h1>Recommandations</h1>
+            
             {messageRecomms && <p>{messageRecomms}</p>}
             {recomms.length > 0 ? (
                 <ul>
