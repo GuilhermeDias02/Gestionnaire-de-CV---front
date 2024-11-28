@@ -1,6 +1,47 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = "http://localhost:5000/api";
+
+// Récupérer les recommandations pour un CV
+export const getRecommendations = async (cvId) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_URL}/recommendation/${cvId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des recommandations :", error);
+    throw error;
+  }
+};
+
+// Créer une nouvelle recommandation
+export const createRecommendation = async (cvId, message, rating) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `${API_URL}/recommendation`,
+      {
+        cv: cvId,
+        message: message,
+        rating: rating,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la création de la recommandation :", error);
+    throw error;
+  }
+};
+
 
 // Fonction pour créer un utilisateur
 export const createUser = async (userData) => {
