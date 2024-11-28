@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getCvById } from "../api"; 
+import { getCvById, getRecommByCv } from "../api";
 
 const CvDetails = () => {
     const { id } = useParams();
     const [cv, setCv] = useState(null);
     const [message, setMessage] = useState("");
+    const [recomms, setRecomms] = useState([]);
+    const [messageRecomms, setMessageRecomms] = useState("");
 
     useEffect(() => {
         const fetchCvDetails = async () => {
@@ -17,8 +19,19 @@ const CvDetails = () => {
                 setMessage("Erreur lors de la récupération du CV.", error);
             }
         };
+        const fetchRecomms = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const recommData = await getRecommByCv(id, token);
+                setRecomms(recommData);
+            } catch (error) {
+                setMessageRecomms("Erreur lors de la récupération des recomms");
+            }
+        }
+        const fetch
 
         fetchCvDetails();
+        fetchRecomms();
     }, [id]);
 
     if (!cv) {
@@ -54,6 +67,31 @@ const CvDetails = () => {
                         )}
                     </ul>
                 </div>
+            )}
+
+            <h1>Recommandations</h1>
+            {messageRecomms && <p>{messageRecomms}</p>}
+            {recomms.length > 0 ? (
+                <ul>
+                    {recomms.map((recomm) => (
+                        <li key={recomm._id}>
+                            <h2
+                                className="recomm-title"
+                                onClick={() => handleViewDetails(cv._id)}
+                                style={{ cursor: 'pointer', color: 'blue' }}
+                            >
+                                {cv.titre}
+                            </h2>
+                            <p>{recomm.message}</p>
+
+                            {/* <button onClick={() => handleEdit(cv._id)}>Éditer</button> */}
+                            {}
+                                <button onClick={() => handleDelete(cv._id)}>Supprimer</button>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>Pas de recommandations.</p>
             )}
         </div>
     );

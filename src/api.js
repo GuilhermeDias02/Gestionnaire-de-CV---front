@@ -99,3 +99,12 @@ export const searchCvs = async (searchTerm) => {
   }
 };
 
+export const getRecommByCv = async (cvId, token) => {
+  try {
+    const response = await axios.get(`${API_URL}/recommendation/cv/${cvId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la recherche des recommendations:', error);
+    throw error;
+  }
+};
