@@ -42,6 +42,24 @@ export const createRecommendation = async (cvId, message, rating) => {
   }
 };
 
+export const deleteRecommendation = async (recommendationId, token) => {
+  try {
+      const response = await axios.delete(
+          `${API_URL}/recommendation/${recommendationId}`,
+          {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+          }
+      );
+      return response.data;
+  } catch (error) {
+      console.error('Erreur lors de la suppression de la recommandation :', error);
+      throw error;
+  }
+};
+
+
 
 // Fonction pour créer un utilisateur
 export const createUser = async (userData) => {
@@ -57,6 +75,9 @@ export const createUser = async (userData) => {
 export const login = async (userData) => {
   try {
     const response = await axios.post(`${API_URL}/auth/login`, userData);
+
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("userId", response.data.user._id);
     return response.data;
   } catch (error) {
     console.error('Error login:', error.response?.data || error.message);
@@ -139,4 +160,39 @@ export const searchCvs = async (searchTerm) => {
     throw error;
   }
 };
+
+export const getUserById = async (userId, token) => {
+  try {
+      const response = await axios.get(`${API_URL}/user/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Erreur lors de la récupération de l'utilisateur :", error);
+      throw error;
+  }
+};
+
+export const updateUserProfile = async (userId, profileData) => {
+  try {
+      const token = localStorage.getItem("token"); // Récupère le token de l'utilisateur
+      if (!token || !userId) {
+          throw new Error("Utilisateur non authentifié ou ID utilisateur manquant.");
+      }
+
+      const response = await axios.put(
+          `${API_URL}/users/${userId}`,
+          profileData,
+          {
+              headers: { Authorization: `Bearer ${token}` }, // Ajoute l'authentification
+          }
+      );
+
+      return response.data;
+  } catch (error) {
+      console.error("Erreur lors de la mise à jour du profil :", error);
+      throw error;
+  }
+};
+
 
